@@ -4,13 +4,6 @@ pipeline {
         GIT_BRANCH = 'main'
         DOCKER_REPO = 'theironhidex'
         CONTAINER_PORT= '87'
-        AWS_ACCESS_KEY_ID = "aws-jose('aws_access_key_id')"
-        AWS_SECRET_ACCESS_KEY = "aws-jose('aws_secret_access_key')"
-	TF_VAR_region = "eu-west-3"
-	TF_VAR_repository_id = "${JOB_BASE_NAME}"
-        TF_VAR_image_version = "${BUILD_NUMBER}"
-        TF_VAR_access_key = "${AWS_ACCESS_KEY_ID}"
-	TF_VAR_secret_key = "${AWS_SECRET_ACCESS_KEY}"
       }
 
     agent any
@@ -58,31 +51,38 @@ pipeline {
                 sh 'terraform fmt'
             }
         }
-        
+	    
         stage('terraform Init') {
             steps{
-                sh """
-		export TF_VAR_region='eu-west-3'
-        	export TF_VAR_access_key = ${AWS_ACCESS_KEY_ID}
-		export TF_VAR_secret_key = ${AWS_SECRET_ACCESS_KEY}
-		terraform init
-		""" 
+                sh 'terraform init'
+            }
+        }
+	    
+        stage('Build infras?') {
+            steps{
+                input "Proceed building the infrastructure?"
             }
         }
         
         stage('terraform apply') {
             steps{
-                sh 'terraform apply --auto-approve'
+                sh "terraform apply -var=\"container_port=${env.CONTAINER_PORT}\" -var=\"reponame=${env.DOCKER_REPO}\" -var=\"access_key=${env."aws-jose('aws_access_key_id')"}\" -var=\"secret_key=${env."aws-jose('aws_secret_access_key')"}\" --auto-approve"
             }
         }
-
-        stage('Checking for destroying the infrastructure') {
+	    
+        stage('Destroy infras?') {
             steps{
-                input "Proceed destroying the instance?"
-                sh 'terraform destroy --auto-approve'
+                input "Proceed destroying the infrastructure?"
             }
         }
-
+	    
+        stage('Executing Terraform Destroy') {
+            steps{
+                sh "terraform destroy --auto-approve"
+            }
+        }
+            }
+        }
     }
 
     
