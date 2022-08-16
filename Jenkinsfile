@@ -2,6 +2,7 @@ pipeline {
     environment {
         GIT_REPO = 'https://github.com/TheIronhidex/terraform-var'
         GIT_BRANCH = 'main'
+	REGION = 'eu-west-3'
         DOCKER_REPO = 'theironhidex'
         CONTAINER_PORT= '87'
       }
@@ -33,19 +34,6 @@ pipeline {
             }
         }
 
-	stage ("Create init-script.sh") {
-	    steps {
-		sh '''
-                   cat <<EOT > init-script.sh
-                   docker login -u theironhidex -p
-                   docker pull ${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}
-                   docker run -d -p 80:80 ${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}
-                   docker system prune -f
-                   EOT
-		'''
-	    }
-	}
-        
         stage('terraform format check') {
             steps{
                 sh 'terraform fmt'
@@ -66,8 +54,15 @@ pipeline {
         
         stage('terraform apply') {
             steps{
-                sh "terraform apply -var=\"container_port=${env.CONTAINER_PORT}\" -var=\"reponame=${env.DOCKER_REPO}\" -var=\"access_key=${env."aws-jose('aws_access_key_id')"}\" -var=\"secret_key=${env."aws-jose('aws_secret_access_key')"}\" --auto-approve"
-            }
+                sh """
+		terraform apply -var=\"container_port=${env.CONTAINER_PORT}\" \
+		-var=\"reponame=${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}\" \
+		-var=\"region=${env.REGION}\" \
+		-var=\"access_key=${env."aws-jose('aws_access_key_id')"}\" \
+		-var=\"secret_key=${env."aws-jose('aws_secret_access_key')"}\" \
+		--auto-approve"
+                """
+	    }
         }
 	    
         stage('Destroy infras?') {
