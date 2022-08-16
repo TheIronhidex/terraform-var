@@ -67,8 +67,7 @@ resource "aws_instance" "web" {
   
   IMAGE='${var.reponame}'
   PORT='${var.container_port}'
-  DOCKERID=`docker ps  | grep ":${PORT}" | awk {'print $1'}`; if [ -z $DOCKERID ] then docker run -d -p ${PORT}:80 ${IMAGE}; \
-  else docker stop ${DOCKERID} && docker run -d -p ${PORT}:80 ${IMAGE}; fi
+  docker run -d -p ${PORT}:80 ${IMAGE}
   EOL
 }
 
