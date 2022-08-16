@@ -4,13 +4,13 @@ pipeline {
         GIT_BRANCH = 'main'
         DOCKER_REPO = 'theironhidex'
         CONTAINER_PORT= '87'
-        AWS_ACCESS_KEY_ID = aws-jose('aws_access_key_id')
-        AWS_SECRET_ACCESS_KEY = aws-jose('aws_secret_access_key')
+        AWS_ACCESS_KEY_ID = "aws-jose('aws_access_key_id')"
+        AWS_SECRET_ACCESS_KEY = "aws-jose('aws_secret_access_key')"
 	TF_VAR_region = "eu-west-3"
-	TF_VAR_repository_id = ${JOB_BASE_NAME}
-        TF_VAR_image_version = ${BUILD_NUMBER}
-        TF_VAR_access_key = ${AWS_ACCESS_KEY_ID}
-	TF_VAR_secret_key = ${AWS_SECRET_ACCESS_KEY}
+	TF_VAR_repository_id = "${JOB_BASE_NAME}"
+        TF_VAR_image_version = "${BUILD_NUMBER}"
+        TF_VAR_access_key = "${AWS_ACCESS_KEY_ID}"
+	TF_VAR_secret_key = "${AWS_SECRET_ACCESS_KEY}"
       }
 
     agent any
