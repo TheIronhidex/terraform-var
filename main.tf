@@ -10,6 +10,7 @@ variable "container_port" {
   type = integer
 }
 variable "reponame" {}
+variable "region" {}
 variable "access_key" {}
 variable "secret_key" {}
 
