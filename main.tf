@@ -7,7 +7,7 @@ terraform {
 }
 
 variable "container_port" {
-  type = integer
+  type = number
 }
 variable "reponame" {}
 variable "region" {}
