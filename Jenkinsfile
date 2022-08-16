@@ -4,7 +4,7 @@ pipeline {
         GIT_BRANCH = 'main'
 	REGION = 'eu-west-3'
         DOCKER_REPO = 'theironhidex'
-        CONTAINER_PORT= '87'
+        CONTAINER_PORT = '87'
       }
 
     agent any
@@ -54,12 +54,13 @@ pipeline {
         
         stage('terraform apply') {
             steps{
+	     withCredentials([aws(credentialsID: 'aws-jose', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')])
                 sh """
 		terraform apply -var=\"container_port=${env.CONTAINER_PORT}\" \
 		-var=\"reponame=${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}\" \
 		-var=\"region=${env.REGION}\" \
-		-var=\"access_key=${env.\"aws-jose('aws_access_key_id')\"}\" \
-		-var=\"secret_key=${env.\"aws-jose('aws_secret_access_key')\"}\" \
+		-var=\"access_key=${accessKeyVariable}\" \
+		-var=\"secret_key=${secretKeyVariable}\" \
 		--auto-approve"
                 """
 	    }
