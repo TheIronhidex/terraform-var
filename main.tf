@@ -44,6 +44,7 @@ resource "aws_security_group" "security_group1" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
 
 ##Launching instance
 resource "aws_instance" "web" {
