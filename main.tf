@@ -45,19 +45,30 @@ resource "aws_security_group" "security_group1" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  output "op_sg" {
-    value = aws_security_group.security_group1
-  }
-
 ##Launching instance
 resource "aws_instance" "web" {
   ami             = "ubuntu"
   instance_type   = "t2.micro"
   security_groups = [ "allow_tls" ]
-  user_data       = file("init-script.sh")
+  user_data = <<-EOL
+  #!/bin/bash -xe
+  apt-get update
+  apt-get install \
+   ca-certificates \
+   curl \
+   gnupg \
+   lsb-release
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  apt install docker.io
+  
+  DOCKERID=`docker ps  | grep ":87" | awk {'print $1'}`; if [ -z $DOCKERID ] then docker run -d -p 87:80 theironhidex/${JOB_BASE_NAME}:${BUILD_NUMBER}; \
+  else docker stop ${DOCKERID} && docker run -d -p 87:80 theironhidex/${JOB_BASE_NAME}:${BUILD_NUMBER}; fi
+
+  EOL
 }
 
-output "op_inst_az" {
-  value = aws_instance.web.availability_zone
-}
 
