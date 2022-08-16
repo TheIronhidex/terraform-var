@@ -6,6 +6,13 @@ terraform {
   }
 }
 
+variable "container_port" {
+  type = integer
+}
+variable "reponame" {}
+variable "access_key" {}
+variable "secret_key" {}
+
 provider "aws" {
   access_key = var.access_key
   secret_key = var.secret_key
@@ -68,6 +75,7 @@ resource "aws_instance" "web" {
   
   IMAGE='${var.reponame}'
   PORT='${var.container_port}'
+  docker pull ${IMAGE}
   docker run -d -p ${PORT}:80 ${IMAGE}
   EOL
   
