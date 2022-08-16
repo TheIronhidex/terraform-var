@@ -6,9 +6,7 @@ terraform {
   }
 }
 
-variable "container_port" {
-  type = number
-}
+variable "container_port" {}
 variable "reponame" {}
 variable "region" {}
 variable "access_key" {}
