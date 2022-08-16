@@ -58,8 +58,8 @@ pipeline {
 		terraform apply -var=\"container_port=${env.CONTAINER_PORT}\" \
 		-var=\"reponame=${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}\" \
 		-var=\"region=${env.REGION}\" \
-		-var=\"access_key=${env.\"aws-jose('aws_access_key_id')\"}\" \
-		-var=\"secret_key=${env.\"aws-jose('aws_secret_access_key')\"}\" \
+		-var=\"access_key=${env."aws-jose('aws_access_key_id')"}\" \
+		-var=\"secret_key=${env."aws-jose('aws_secret_access_key')"}\" \
 		--auto-approve"
                 """
 	    }
