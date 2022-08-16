@@ -70,6 +70,9 @@ resource "aws_instance" "web" {
   PORT='${var.container_port}'
   docker run -d -p ${PORT}:80 ${IMAGE}
   EOL
+  
+  tags = {
+    Name = "Web"
 }
 
 
