@@ -33,7 +33,7 @@ pipeline {
 
         stage ("Publish Image") {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-jose', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-jose', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
                     sh "docker login -u $docker_user -p $docker_pass"
                     sh "docker push ${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}"
                 }
