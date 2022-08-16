@@ -65,9 +65,10 @@ resource "aws_instance" "web" {
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   apt install docker.io
   
-  DOCKERID=`docker ps  | grep ":87" | awk {'print $1'}`; if [ -z $DOCKERID ] then docker run -d -p 87:80 theironhidex/${JOB_BASE_NAME}:${BUILD_NUMBER}; \
-  else docker stop ${DOCKERID} && docker run -d -p 87:80 theironhidex/${JOB_BASE_NAME}:${BUILD_NUMBER}; fi
-
+  IMAGE='${var.reponame}'
+  PORT='${var.container_port}'
+  DOCKERID=`docker ps  | grep ":${PORT}" | awk {'print $1'}`; if [ -z $DOCKERID ] then docker run -d -p ${PORT}:80 ${IMAGE}; \
+  else docker stop ${DOCKERID} && docker run -d -p ${PORT}:80 ${IMAGE}; fi
   EOL
 }
 
