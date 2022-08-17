@@ -1,7 +1,7 @@
 pipeline {
     environment {
         GIT_REPO = 'https://github.com/TheIronhidex/terraform-var'
-        GIT_BRANCH = 'main'
+        GIT_BRANCH = 'modules'
 	REGION = 'eu-west-3'
 	ZONE = 'eu-west-3a'
         DOCKER_REPO = 'theironhidex'
