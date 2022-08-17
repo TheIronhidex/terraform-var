@@ -1,9 +1,8 @@
 pipeline {
     environment {
         GIT_REPO = 'https://github.com/TheIronhidex/terraform-var'
-        GIT_BRANCH = 'modules'
+        GIT_BRANCH = 'main'
 	REGION = 'eu-west-3'
-	ZONE = 'eu-west-3a'
         DOCKER_REPO = 'theironhidex'
         CONTAINER_PORT = '87'
       }
@@ -42,7 +41,7 @@ pipeline {
         }
 	    
         stage('terraform Init') {
-            steps{    
+            steps{
                 sh 'terraform init'
             }
         }
@@ -57,33 +56,22 @@ pipeline {
             steps{
 	     withCredentials([
 		     aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-jose', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
-	             sshUserPrivateKey(credentialsId: 'ssh-jose', keyFileVariable: 'public_ssh')] {
+	             sshUserPrivateKey(credentialsId: 'ssh-jose', keyFileVariable: 'PUBLIC_SSH')
+	     ])
+		    {
                 sh """
 		terraform apply -var=\"container_port=${env.CONTAINER_PORT}\" \
 		-var=\"reponame=${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}\" \
 		-var=\"region=${env.REGION}\" \
-		-var=\"availability_zone=${env.ZONE}\" \
 		-var=\"access_key=${AWS_ACCESS_KEY_ID}\" \
 		-var=\"secret_key=${AWS_SECRET_ACCESS_KEY}\" \
-		-var=\"public_ssh=${public_ssh}\" \
+		-var=\"public_ssh=${PUBLIC_SSH}\" \
 		--auto-approve
-                """ 
-	     }
-	 }
-     }
-        
-	stage('Checkpoint') {
-	    steps{
-		input "Try to continue?"
+                """
+	        }
 	    }
-	}	
-        
-	stage('ansible playbook') {
-            steps{
-                sh 'ansible-playbook playbook.yml'
-            }
-	}
-		
+        }
+	    
         stage('Destroy infras?') {
             steps{
                 input "Proceed destroying the infrastructure?"
