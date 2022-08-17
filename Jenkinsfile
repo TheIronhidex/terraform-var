@@ -55,7 +55,9 @@ pipeline {
         
         stage('terraform apply') {
             steps{
-	     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-jose', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]){
+	     withCredentials([
+		     aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-jose', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
+	             sshUserPrivateKey(credentialsId: 'ssh-jose', keyFileVariable: 'public_ssh']){
                 sh """
 		terraform apply -var=\"container_port=${env.CONTAINER_PORT}\" \
 		-var=\"reponame=${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}\" \
@@ -63,6 +65,7 @@ pipeline {
 		-var=\"availability_zone=${env.ZONE}\" \
 		-var=\"access_key=${AWS_ACCESS_KEY_ID}\" \
 		-var=\"secret_key=${AWS_SECRET_ACCESS_KEY}\" \
+		-var=\"public_ssh=${public_ssh}\" \
 		--auto-approve
                 """
 	        }
