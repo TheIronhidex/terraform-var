@@ -56,7 +56,7 @@ pipeline {
             steps{
 	     withCredentials([
 		     aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-jose', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
-	             sshUserPrivateKey(credentialsId: 'ssh-jose', keyFileVariable: 'PUBLIC_SSH')
+	             sshUserPrivateKey(credentialsId: 'ssh-jose', keyFileVariable: '', usernameVariable: 'ubuntu')
 	     ])
 		    {
                 sh """
