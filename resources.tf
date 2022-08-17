@@ -64,8 +64,9 @@ resource "aws_security_group" "sg_22" {
 ##Create key-pair
 resource "aws_key_pair" "ec2key" {
   key_name = "publicKey"
-  public_key = "public_ssh"
+  public_key = "${file(var.public_key_path)}"
 }
+
 
 ##Launching instance
 resource "aws_instance" "testInstance" {
