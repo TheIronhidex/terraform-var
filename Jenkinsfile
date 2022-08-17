@@ -65,7 +65,7 @@ pipeline {
 		-var=\"region=${env.REGION}\" \
 		-var=\"access_key=${AWS_ACCESS_KEY_ID}\" \
 		-var=\"secret_key=${AWS_SECRET_ACCESS_KEY}\" \
-		-var=\"public_ssh=${PUBLIC_SSH}\" \
+		-var=\"public_ssh=${}\" \
 		--auto-approve
                 """
 	        }
