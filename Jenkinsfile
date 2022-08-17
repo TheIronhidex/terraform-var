@@ -3,6 +3,7 @@ pipeline {
         GIT_REPO = 'https://github.com/TheIronhidex/terraform-var'
         GIT_BRANCH = 'main'
 	REGION = 'eu-west-3'
+	ZONE = 'eu-west-3a'
         DOCKER_REPO = 'theironhidex'
         CONTAINER_PORT = '87'
       }
@@ -10,6 +11,7 @@ pipeline {
     agent any
     tools {
        terraform 'terraform20803'
+       ansible 'ansible210'
     }
     stages {
         
@@ -59,6 +61,7 @@ pipeline {
 		terraform apply -var=\"container_port=${env.CONTAINER_PORT}\" \
 		-var=\"reponame=${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}\" \
 		-var=\"region=${env.REGION}\" \
+		-var=\"availability_zone=${env.ZONE}\" \
 		-var=\"access_key=${AWS_ACCESS_KEY_ID}\" \
 		-var=\"secret_key=${AWS_SECRET_ACCESS_KEY}\" \
 		--auto-approve
@@ -66,6 +69,16 @@ pipeline {
 	        }
 	    }
         }
+        
+	stage('Checkpoint')
+	    steps{
+		input "Try to continue?"
+	    }
+        
+        stage('ansible playbook')  #####Revisar comando
+            steps{
+                sh 'ansible-playbook playbook.yml'
+            }
 	    
         stage('Destroy infras?') {
             steps{
