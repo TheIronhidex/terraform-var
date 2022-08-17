@@ -70,16 +70,18 @@ pipeline {
 	    }
         }
         
-	stage('Checkpoint')
+	stage('Checkpoint') {
 	    steps{
 		input "Try to continue?"
 	    }
+	}	
         
-        stage('ansible playbook')
+	stage('ansible playbook') {
             steps{
                 sh 'ansible-playbook playbook.yml'
             }
-	    
+	}
+		
         stage('Destroy infras?') {
             steps{
                 input "Proceed destroying the infrastructure?"
