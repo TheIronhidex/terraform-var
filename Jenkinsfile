@@ -67,10 +67,8 @@ pipeline {
 		-var=\"secret_key=${AWS_SECRET_ACCESS_KEY}\" \
 		-var=\"public_ssh=${public_ssh}\" \
 		--auto-approve
-                """
-	        }
-	    }
-        }
+                """ 
+	     }}}
         
 	stage('Checkpoint') {
 	    steps{
