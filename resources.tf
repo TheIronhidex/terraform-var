@@ -61,27 +61,12 @@ resource "aws_security_group" "sg_22" {
   }  
 }
 
-##Create key-pair
-resource "aws_key_pair" "ec2key" {
-  key_name = "publicKey"
-  public_key = "${var.public_key}"
-}
-
-
 ##Launching instance
 resource "aws_instance" "testInstance" {
   ami           = "${var.instance_ami}"
   instance_type = "${var.instance_type}"
   subnet_id = "${aws_subnet.subnet_public.id}"
   vpc_security_group_ids = ["${aws_security_group.sg_22.id}"]
-  key_name = "${aws_key_pair.ec2key.key_name}" 
-    
-    connection {
-      type        = "ssh"
-      host        = self.public_ip
-      user        = "ubuntu"
-      private_key = "${aws_key_pair.ec2key.key_name}"
-      timeout     = "4m"
-   }
+  key_name = "jose-ssh" 
 }
 
