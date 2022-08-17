@@ -64,8 +64,23 @@ pipeline {
 		-var=\"secret_key=${AWS_SECRET_ACCESS_KEY}\" \
 		--auto-approve
                 """
-	        }
+	       }
+		script {
+		    PUBLIC_IP_EC2 = sh (returnStdout: true, script: "terraform output instance public_ip").trim()
+	           }
 	    }
+	}
+		
+        stage('Input of new IPs') {
+            steps{
+                sh "echo $PUBLIC_IP_EC2 > inventory.host"
+            }
+        }
+	    
+	stage ("Ansible Hello World") {
+            steps {
+                ansiblePlaybook become: true, colorized: true, extras: '-v', disableHostKeyChecking: true, credentialsId: 'jose-ssh', installation: 'ansible210', inventory: 'inventory.hosts', playbook: 'playbook-hello-world.yml'
+            }
         }
 	    
         stage('Destroy infras?') {
