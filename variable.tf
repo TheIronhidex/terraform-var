@@ -27,9 +27,6 @@ variable "availability_zone" {
   description = "availability zone to create subnet"
   default = "eu-west-3a"
 }
-variable "public_key" {
-  description = "Public SSH key"
-}
 variable "instance_ami" {
   description = "AMI for aws EC2 instance"
   default = "ubuntu"
