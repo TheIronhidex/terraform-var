@@ -64,7 +64,7 @@ resource "aws_security_group" "sg_22" {
 ##Create key-pair
 resource "aws_key_pair" "ec2key" {
   key_name = "publicKey"
-  public_key = "${file(var.public_key_path)}"
+  public_key = "${var.public_key}"
 }
 
 
