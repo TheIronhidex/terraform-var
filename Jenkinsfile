@@ -94,17 +94,6 @@ pipeline {
                 ansiblePlaybook become: true, colorized: true, extras: '-v', disableHostKeyChecking: true, credentialsId: 'jose-ssh', installation: 'ansible210', inventory: 'inventory.hosts', playbook: 'playbook-hello-world.yml'
             }
         }
-	    
-        stage('Destroy infras?') {
-            steps{
-                input "Proceed destroying the infrastructure?"
-            }
-        }
-	    
-        stage('Executing Terraform Destroy') {
-            steps{
-                sh "terraform destroy --auto-approve"
-            }
-        }
+
     }   
 }
