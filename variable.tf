@@ -27,9 +27,9 @@ variable "availability_zone" {
   description = "availability zone to create subnet"
   default = "eu-west-3a"
 }
-variable "public_key_path" {
-  description = "Public key path"
-  default = "~/.ssh/id_rsa.pub"
+variable "public_key" {
+  description = "Public key"
+  default = "public_key"
 }
 variable "instance_ami" {
   description = "AMI for aws EC2 instance"
