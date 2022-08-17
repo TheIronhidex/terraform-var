@@ -70,6 +70,18 @@ pipeline {
 	           }
 	    }
 	}
+	    
+	    stage('Destroy infras?') {
+            steps{
+                input "Proceed destroying the infrastructure?"
+            }
+        }
+	    
+        stage('Executing Terraform Destroy') {
+            steps{
+                sh "terraform destroy --auto-approve"
+            }
+        }
 		
         stage('Input of new IPs') {
             steps{
