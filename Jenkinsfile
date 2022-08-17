@@ -55,17 +55,13 @@ pipeline {
         stage('terraform apply') {
             steps{
 	     withCredentials([
-		     aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-jose', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
-	             string(credentialsId: 'jose-ssh-ec2', variable: 'PUBLIC_KEY')
-	     ])
-		    {
+		     aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-jose', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 sh """
 		terraform apply -var=\"container_port=${env.CONTAINER_PORT}\" \
 		-var=\"reponame=${env.DOCKER_REPO}/${JOB_BASE_NAME}:${BUILD_NUMBER}\" \
 		-var=\"region=${env.REGION}\" \
 		-var=\"access_key=${AWS_ACCESS_KEY_ID}\" \
 		-var=\"secret_key=${AWS_SECRET_ACCESS_KEY}\" \
-		-var=\"public_key=${PUBLIC_KEY}\" \
 		--auto-approve
                 """
 	        }
