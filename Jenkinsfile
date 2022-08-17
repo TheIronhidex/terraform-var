@@ -56,7 +56,7 @@ pipeline {
             steps{
 	     withCredentials([
 		     aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-jose', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
-	             sshUserPrivateKey(credentialsId: 'ssh-jose', keyFileVariable: '', usernameVariable: 'ubuntu')
+	             string(credentialsId: 'jose-ssh-ec2', variable: 'public_key')
 	     ])
 		    {
                 sh """
@@ -65,7 +65,7 @@ pipeline {
 		-var=\"region=${env.REGION}\" \
 		-var=\"access_key=${AWS_ACCESS_KEY_ID}\" \
 		-var=\"secret_key=${AWS_SECRET_ACCESS_KEY}\" \
-		-var=\"public_ssh=${}\" \
+		-var=\"public_key=${public_key}\" \
 		--auto-approve
                 """
 	        }
