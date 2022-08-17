@@ -75,7 +75,7 @@ pipeline {
 		input "Try to continue?"
 	    }
         
-        stage('ansible playbook')  #####Revisar comando
+        stage('ansible playbook')
             steps{
                 sh 'ansible-playbook playbook.yml'
             }
