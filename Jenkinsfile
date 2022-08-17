@@ -11,7 +11,6 @@ pipeline {
     agent any
     tools {
        terraform 'terraform20803'
-       ansible 'ansible210'
     }
     stages {
         
